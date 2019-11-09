@@ -11,6 +11,15 @@ export class CreateUserInput {
   lastName: string;
 }
 
+export class PaginateUserInput {
+  page: number;
+  limit: number;
+  firstName?: string;
+  lastName?: string;
+  socialSecurityNumber?: string;
+  email?: string;
+}
+
 export class SignInInput {
   email: string;
   password: string;
@@ -35,8 +44,18 @@ export abstract class IMutation {
   ): User | Promise<User>;
 }
 
+export class PaginateUserResult {
+  page: number;
+  limit: number;
+  totalPages: number;
+  count: number;
+  data?: User[];
+}
+
 export abstract class IQuery {
-  abstract users(): User[] | Promise<User[]>;
+  abstract users(
+    input?: PaginateUserInput,
+  ): PaginateUserResult | Promise<PaginateUserResult>;
 
   abstract user(id: string): User | Promise<User>;
 

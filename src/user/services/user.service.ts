@@ -6,6 +6,9 @@ import { IUserService } from '../interfaces/user-service.interface';
 import { CryptoService } from '../../common/services/crypto.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { PaginateUserDto } from '../dto/paginate-user.dto';
+import { Pager } from '../../common/models/pager.model';
+import { PaginateService } from '../../common/services/paginate.service';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -13,6 +16,7 @@ export class UserService implements IUserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly cryptoService: CryptoService,
+    private readonly paginateService: PaginateService,
   ) {}
 
   async createUser(createDto: CreateUserDto): Promise<User> {
@@ -45,9 +49,38 @@ export class UserService implements IUserService {
     return user;
   }
 
-  paginateUsers(paginateDto: any): Promise<User[]> {
+  async paginateUsers(paginateDto: PaginateUserDto): Promise<Pager<User>> {
     const query = this.userRepository.createQueryBuilder('user');
-    return query.getMany();
+    if (paginateDto.email) {
+      query.andWhere('user.email like :email', {
+        email: `%${paginateDto.email}%`,
+      });
+    }
+    if (paginateDto.firstName) {
+      query.andWhere('user.firstName like :firstName', {
+        firstName: `%${paginateDto.firstName}%`,
+      });
+    }
+    if (paginateDto.lastName) {
+      query.andWhere('user.lastName like :lastName', {
+        lastName: `%${paginateDto.lastName}%`,
+      });
+    }
+    if (paginateDto.socialSecurityNumber) {
+      query.andWhere('user.socialSecurityNumber like :socialSecurityNumber', {
+        socialSecurityNumber: `%${paginateDto.socialSecurityNumber}%`,
+      });
+    }
+    query
+      .skip((paginateDto.page - 1) * paginateDto.limit)
+      .take(paginateDto.limit);
+    const result = await query.getManyAndCount();
+    return this.paginateService.paginate<User>(
+      result[0],
+      result[1],
+      paginateDto.page,
+      paginateDto.limit,
+    );
   }
 
   async updateUser(id: string, updateDto: UpdateUserDto): Promise<User> {

@@ -2,6 +2,7 @@ import { Factory } from 'rosie';
 import { User } from '../../entities/user.entity';
 import { name, internet, date, random, helpers } from 'faker/locale/pt_BR';
 import { CreateUserDto } from '../../dto/create-user.dto';
+import { UpdateUserDto } from '../../dto/update-user.dto';
 
 export default Factory.define<User>('user').attrs({
   confirmed: false,
@@ -22,4 +23,13 @@ export const CreateUserDtoFactory = Factory.define<CreateUserDto>(
   firstName: () => name.firstName(),
   lastName: () => name.lastName(),
   password: () => internet.password(6),
+});
+
+export const UpdateUserDtoFactory = Factory.define<UpdateUserDto>(
+  'updateUserDto',
+).attrs({
+  firstName: () => name.firstName(),
+  lastName: () => name.lastName(),
+  socialSecurityNumber: () =>
+    helpers.replaceSymbolWithNumber('###.###.###-##', '#'),
 });

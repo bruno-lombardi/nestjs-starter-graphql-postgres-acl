@@ -4,6 +4,8 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { FindOneOptions, DeleteResult } from 'typeorm';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import UserFactory from './factories/user.factory';
+import { Pager } from '../../common/models/pager.model';
+import { PaginateUserDto } from '../dto/paginate-user.dto';
 
 export class MockUserService implements IUserService {
   async createUser(createDto: CreateUserDto): Promise<User> {
@@ -19,8 +21,14 @@ export class MockUserService implements IUserService {
     return UserFactory.build({ ...attrs });
   }
 
-  async paginateUsers(paginateDto: any): Promise<User[]> {
-    return UserFactory.buildList(10);
+  async paginateUsers(paginateDto: PaginateUserDto): Promise<Pager<User>> {
+    return {
+      count: paginateDto.limit,
+      data: UserFactory.buildList(paginateDto.limit),
+      limit: paginateDto.limit,
+      page: paginateDto.page,
+      totalPages: paginateDto.page,
+    };
   }
 
   async updateUser(id: string, updateDto: UpdateUserDto): Promise<User> {

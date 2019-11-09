@@ -28,5 +28,15 @@ describe('AuthResolver', () => {
 
   describe('signIn', () => {
     it('should be defined', () => expect(resolver.signIn).toBeDefined());
+
+    it('should call AuthService.signIn with email and password', async () => {
+      expect.assertions(2);
+      const spy = jest.spyOn(service, 'signIn');
+      const signInDto = { email: 'example@email.com', password: '123456' };
+      await resolver.signIn(signInDto);
+      expect(spy).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalledWith(signInDto.email, signInDto.password);
+      spy.mockRestore();
+    });
   });
 });

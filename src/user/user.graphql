@@ -11,6 +11,23 @@ input UpdateUserInput {
   socialSecurityNumber: String
 }
 
+input PaginateUserInput {
+  page: Int!
+  limit: Int!
+  firstName: String
+  lastName: String
+  socialSecurityNumber: String
+  email: String
+}
+
+type PaginateUserResult {
+  page: Int!
+  limit: Int!
+  totalPages: Int!
+  count: Int!
+  data: [User!]
+}
+
 type User {
   id: ID!
   email: String!
@@ -21,7 +38,7 @@ type User {
 }
 
 type Query {
-  users: [User]!
+  users(input: PaginateUserInput): PaginateUserResult!
   user(id: ID!): User
   me: User
 }
