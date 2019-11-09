@@ -1,0 +1,12 @@
+input SignInInput {
+  email: String!
+  password: String!
+}
+
+extend type User {
+  token: String
+}
+
+type Mutation {
+  signIn(signInInput: SignInInput): User
+}
