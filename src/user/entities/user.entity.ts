@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  JoinColumn,
+} from 'typeorm';
+import { Role } from './role.entity';
 
 @Entity()
 export class User {
@@ -40,4 +47,12 @@ export class User {
     nullable: true,
   })
   birthDate: Date;
+
+  // @ManyToMany(type => Role, role => role.users, {
+  //   eager: true,
+  //   onUpdate: 'CASCADE',
+  //   onDelete: 'SET NULL',
+  // })
+  // @JoinColumn()
+  // roles: Role[];
 }
