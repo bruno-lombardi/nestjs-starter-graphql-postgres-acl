@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
-  JoinColumn,
+  JoinTable,
 } from 'typeorm';
 import { Role } from './role.entity';
 
@@ -48,11 +48,10 @@ export class User {
   })
   birthDate: Date;
 
-  // @ManyToMany(type => Role, role => role.users, {
-  //   eager: true,
-  //   onUpdate: 'CASCADE',
-  //   onDelete: 'SET NULL',
-  // })
-  // @JoinColumn()
-  // roles: Role[];
+  @ManyToMany(type => Role, role => role.users, {
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+  })
+  @JoinTable()
+  roles?: Role[];
 }

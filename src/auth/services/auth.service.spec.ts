@@ -16,6 +16,7 @@ import { DatabaseModule } from '../../database/database.module';
 import { HttpException } from '@nestjs/common';
 
 import '../../mock-env';
+jest.setTimeout(10000);
 
 describe('AuthService', () => {
   let service: AuthService;

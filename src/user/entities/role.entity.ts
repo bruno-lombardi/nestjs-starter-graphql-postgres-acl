@@ -13,6 +13,17 @@ export class Role {
   })
   name: string;
 
+  @Column({
+    length: 128,
+  })
+  title: string;
+
+  @Column({
+    length: 255,
+    nullable: true,
+  })
+  description?: string;
+
   @ManyToMany(type => Permission, permission => permission.roles, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
@@ -20,11 +31,11 @@ export class Role {
   })
   permissions: Permission[];
 
-  // @ManyToMany(type => User, user => user.roles, {
-  //   onUpdate: 'CASCADE',
-  //   onDelete: 'SET NULL',
-  // })
-  // users: User[];
+  @ManyToMany(type => User, user => user.roles, {
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+  })
+  users: User[];
 
   @Column({
     type: 'timestamp',
