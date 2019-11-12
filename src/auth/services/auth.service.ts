@@ -35,6 +35,9 @@ export class AuthService implements IAuthService {
 
   async validateUser(payload: JwtPayload): Promise<User> {
     Logger.log('Payload: ' + JSON.stringify(payload));
-    return this.usersService.findUserBy({ where: { ...payload } });
+    return this.usersService.findUserBy({
+      where: { ...payload },
+      relations: ['roles'],
+    });
   }
 }

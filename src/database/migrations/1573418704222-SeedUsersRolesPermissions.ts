@@ -5,7 +5,7 @@ import { Role } from '../../user/entities/role.entity';
 import { Permission } from '../../user/entities/permission.entity';
 
 import rolesSeed from '../seeds/role.seed';
-import permissionsSeed from '../seeds/permission.seed';
+import PermissionBuilder from '../seeds/permission.seed';
 
 export class SeedUsersRolesPermissions1573418704222
   implements MigrationInterface {
@@ -16,22 +16,25 @@ export class SeedUsersRolesPermissions1573418704222
       Permission,
     );
 
-    const permissions = await permissionRepository.save(permissionsSeed);
+    const adminPermissions = await permissionRepository.save(
+      PermissionBuilder.getPermissionsFor('ADMIN'),
+    );
+    const managerPermissions = await permissionRepository.save(
+      PermissionBuilder.getPermissionsFor('MANAGER'),
+    );
+    const customerPermissions = await permissionRepository.save(
+      PermissionBuilder.getPermissionsFor('CUSTOMER'),
+    );
+
     const roles: Role[] = await roleRepository.save(rolesSeed);
 
     const adminRole = roles.find(r => r.name === 'ADMIN');
     const managerRole = roles.find(r => r.name === 'MANAGER');
     const customerRole = roles.find(r => r.name === 'CUSTOMER');
 
-    adminRole.permissions = permissions;
-    managerRole.permissions = permissions.filter(p => !(p.name === 'delete'));
-    customerRole.permissions = permissions.filter(
-      p =>
-        !(
-          p.name === 'delete' ||
-          (p.name !== 'read' && p.resource === 'product')
-        ),
-    );
+    adminRole.permissions = adminPermissions;
+    managerRole.permissions = managerPermissions;
+    customerRole.permissions = customerPermissions;
 
     await roleRepository.save([].concat(adminRole, managerRole, customerRole));
     const adminUser = await admin();

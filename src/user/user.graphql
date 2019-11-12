@@ -35,6 +35,7 @@ type User {
   lastName: String!
   confirmed: Boolean
   socialSecurityNumber: String
+  roles: [Role!]
 }
 
 type Query {

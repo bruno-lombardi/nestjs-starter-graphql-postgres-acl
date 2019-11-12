@@ -48,6 +48,10 @@ describe('AuthService', () => {
     jwtService = module.get<JwtService>(JwtService);
   });
 
+  afterAll(async () => {
+    await new Promise(resolve => setTimeout(() => resolve(), 2000)); // avoid jest open handle error
+  });
+
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
@@ -130,7 +134,8 @@ describe('AuthService', () => {
         email: user.email,
         id: user.id,
       });
-      expect(validatedUser).toEqual(user);
+      expect(validatedUser.email).toEqual(user.email);
+      expect(validatedUser.id).toEqual(user.id);
     });
 
     it('should not validate user if invalid email in payload', async () => {

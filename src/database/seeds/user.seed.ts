@@ -5,7 +5,7 @@ import { User } from '../../user/entities/user.entity';
 const crypto = new CryptoService();
 
 export const admin = async (): Promise<User> => {
-  const password = await crypto.generateHash('admin');
+  const password = await crypto.generateHash('admin123');
 
   return UserFactory.build({
     confirmed: true,
