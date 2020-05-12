@@ -1,7 +1,4 @@
 import { ConnectionOptions } from 'typeorm';
-import { config } from 'dotenv';
-
-config();
 
 const ormConfig: ConnectionOptions = {
   type: 'postgres',
@@ -9,7 +6,9 @@ const ormConfig: ConnectionOptions = {
   port: Number(process.env.DB_PORT) || 5432,
   username: process.env.DB_USER || 'docker',
   password: process.env.DB_PASSWORD || 'docker',
-  database: process.env.DB_NAME || 'gfrade',
+  // PUT YOUR TEST DB NAME HERE
+  database:
+    process.env.NODE_ENV === 'test' ? 'gfrade_test' : process.env.DB_NAME,
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/database/migrations/**/*{.ts,.js}'],
   logging: Boolean(process.env.DB_LOGGING) || false,

@@ -1,11 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
-import { Role } from './role.entity';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class User {
@@ -25,14 +18,17 @@ export class User {
   @Column({
     default: false,
   })
-  confirmed: boolean;
+  verified: boolean;
 
   @Column({
     unique: true,
+    length: 255,
   })
   email: string;
 
-  @Column()
+  @Column({
+    length: 64,
+  })
   password: string;
 
   @Column({
@@ -40,7 +36,19 @@ export class User {
     length: 14,
     nullable: true,
   })
-  socialSecurityNumber: string;
+  socialSecurityNumber?: string;
+
+  @Column({
+    length: 20,
+    nullable: true,
+  })
+  identityDocument?: string;
+
+  @Column({
+    length: 20,
+    nullable: true,
+  })
+  phoneNumber?: string;
 
   @Column({
     type: 'timestamp',
@@ -48,10 +56,9 @@ export class User {
   })
   birthDate: Date;
 
-  @ManyToMany(type => Role, role => role.users, {
-    onUpdate: 'CASCADE',
-    onDelete: 'SET NULL',
+  @Column({
+    default: 'MEMBER',
+    length: 20,
   })
-  @JoinTable()
-  roles?: Role[];
+  role: string;
 }

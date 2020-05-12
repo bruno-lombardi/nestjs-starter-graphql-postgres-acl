@@ -28,7 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    user.password = undefined;
+    delete user.password;
     return user;
   }
 }

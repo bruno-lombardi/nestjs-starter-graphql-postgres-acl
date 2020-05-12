@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { UserService } from '../../user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CryptoService } from '../../common/services/crypto.service';
@@ -20,13 +20,16 @@ export class AuthService implements IAuthService {
       password,
       user.password,
     );
-    if (passMatch) {
-      const payload: JwtPayload = { email: user.email, id: user.id };
-      const token = await this.createToken(payload);
-      user.password = undefined;
-      return [token, user];
+    if (!passMatch) {
+      throw new HttpException(
+        { error: 'Usuário ou senha incorretos', code: HttpStatus.UNAUTHORIZED },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
-    return [null, null];
+    const payload: JwtPayload = { email: user.email, id: user.id };
+    const token = await this.createToken(payload);
+    delete user.password;
+    return [token, user];
   }
 
   async createToken(payload: JwtPayload) {
@@ -34,10 +37,9 @@ export class AuthService implements IAuthService {
   }
 
   async validateUser(payload: JwtPayload): Promise<User> {
-    Logger.log('Payload: ' + JSON.stringify(payload));
+    // Logger.log('Payload: ' + JSON.stringify(payload));
     return this.usersService.findUserBy({
       where: { ...payload },
-      relations: ['roles'],
     });
   }
 }

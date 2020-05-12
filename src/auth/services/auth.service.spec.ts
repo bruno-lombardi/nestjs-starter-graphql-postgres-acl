@@ -14,16 +14,14 @@ import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserModule } from '../../user/user.module';
 import { DatabaseModule } from '../../database/database.module';
 import { HttpException } from '@nestjs/common';
-
-import '../../mock-env';
-jest.setTimeout(10000);
+import { getConnection } from 'typeorm';
 
 describe('AuthService', () => {
   let service: AuthService;
   let userService: UserService;
   let jwtService: JwtService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         CommonModule,
@@ -49,7 +47,8 @@ describe('AuthService', () => {
   });
 
   afterAll(async () => {
-    await new Promise(resolve => setTimeout(() => resolve(), 2000)); // avoid jest open handle error
+    const connection = getConnection();
+    await connection.close();
   });
 
   it('should be defined', () => {
@@ -112,10 +111,9 @@ describe('AuthService', () => {
     });
 
     it('should not sign user if invalid password', async () => {
-      expect.assertions(2);
-      const [token, u] = await service.signIn(user.email, 'invalidpassword');
-      expect(token).toBe(null);
-      expect(u).toBe(null);
+      await expect(
+        service.signIn(user.email, 'invalidpassword'),
+      ).rejects.toBeInstanceOf(HttpException);
     });
   });
 

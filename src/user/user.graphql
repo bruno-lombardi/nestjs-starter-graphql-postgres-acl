@@ -3,12 +3,17 @@ input CreateUserInput {
   password: String!
   firstName: String!
   lastName: String!
+  socialSecurityNumber: String
+  identityDocument: String
+  phoneNumber: String
 }
 
 input UpdateUserInput {
   firstName: String
   lastName: String
   socialSecurityNumber: String
+  identityDocument: String
+  phoneNumber: String
 }
 
 input PaginateUserInput {
@@ -33,9 +38,10 @@ type User {
   email: String!
   firstName: String!
   lastName: String!
-  confirmed: Boolean
+  verified: Boolean
   socialSecurityNumber: String
-  roles: [Role!]
+  identityDocument: String
+  phoneNumber: String
 }
 
 type Query {

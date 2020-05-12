@@ -20,7 +20,6 @@ import { ConfigService } from '../config/services/config.service';
         entities: [resolve(__dirname, '../**/*.entity{.ts,.js}')],
         migrationsRun: Boolean(configService.get('DB_MIGRATE')),
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-        synchronize: Boolean(configService.get('DB_SYNC')),
         keepConnectionAlive: Boolean(configService.get('DB_KEEP_ALIVE')),
         dropSchema: Boolean(configService.get('DB_DROP_SCHEMA')),
       }),

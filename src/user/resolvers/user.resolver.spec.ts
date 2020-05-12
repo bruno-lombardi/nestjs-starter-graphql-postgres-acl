@@ -6,8 +6,6 @@ import UserFactory, {
   CreateUserDtoFactory,
   UpdateUserDtoFactory,
 } from '../mocks/factories/user.factory';
-import { RoleService } from '../services/role.service';
-import { MockRoleService } from '../mocks/role-service.mock';
 
 describe('UserResolver', () => {
   let resolver: UserResolver;
@@ -20,10 +18,6 @@ describe('UserResolver', () => {
         {
           provide: UserService,
           useValue: new MockUserService(),
-        },
-        {
-          provide: RoleService,
-          useValue: new MockRoleService(),
         },
       ],
     }).compile();

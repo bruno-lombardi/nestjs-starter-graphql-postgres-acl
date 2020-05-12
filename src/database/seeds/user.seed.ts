@@ -8,7 +8,7 @@ export const admin = async (): Promise<User> => {
   const password = await crypto.generateHash('admin123');
 
   return UserFactory.build({
-    confirmed: true,
+    verified: true,
     email: 'admin@admin.com',
     firstName: 'Bruno',
     lastName: 'Lombardi',

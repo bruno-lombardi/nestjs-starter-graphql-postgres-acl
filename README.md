@@ -17,10 +17,13 @@ $ npm install
 Make sure to setup your .env file. See [.env.example](.env.example), and ConfigService
 inside [src/config/services/config.service.ts](src/config/services/config.service.ts), every configuration is validated and done there.
 
+#### Test Environment
+Duplicate your `.env` file in a `.test.env` one. Then change your configurations there, so tests can use this file for configuration. Also, check [src/ormconfig.ts](src/ormconfig.ts), and update what you want there for testing environment.
+
 ### Database migration
 You need to configure database connection info inside [src/ormconfig.ts](src/ormconfig.ts) to run migrations, there you can see an example. After config, just run `yarn run typeorm:run`, and the [existing migrations](src/database/migrations) will be executed.
 
-It's **important** to note that migrations also seeds the database with initial roles and permissions, so you can take advantage of ACL in your app.  
+ACL has now changed, and is no more included, future releases will probably use `@casl/ability` to define in-code permissions.
 
 ### Starting server
 You're now ready to start the server, which in development or watch mode launches a GraphQL Playground at [localhost:3333/graphql](http://localhost:3333/graphql), where you can test Queries, Mutations and see how the application works.
@@ -45,7 +48,8 @@ $ yarn run typeorm:migrate CreatePostsTable
 ```
 
 ## Test
-Testing hits the database for now, so make sure you are running a local Postgres database, which you can configure inside [src/mock-env.ts](src/mock-env.ts). The properties you define there you overwrite `process.env` variables, which is how the [ConfigService](src/config/services/config.service.ts) loads configuration.
+Testing hits the database, so make sure you are running a local Postgres database, which you can configure in a `.test.env` file, it is better if your test db is different of your development db. Check [ConfigService](src/config/services/config.service.ts) file to see what properties you can define.
+
 ```bash
 # unit tests
 $ yarn run test

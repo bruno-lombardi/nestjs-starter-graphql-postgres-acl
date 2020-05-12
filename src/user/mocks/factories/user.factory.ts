@@ -5,7 +5,7 @@ import { CreateUserDto } from '../../dto/create-user.dto';
 import { UpdateUserDto } from '../../dto/update-user.dto';
 
 export default Factory.define<User>('user').attrs({
-  confirmed: false,
+  verified: false,
   email: () => internet.email(),
   birthDate: () => date.past(20),
   firstName: () => name.firstName(),
@@ -14,6 +14,9 @@ export default Factory.define<User>('user').attrs({
   password: () => internet.password(6),
   socialSecurityNumber: () =>
     helpers.replaceSymbolWithNumber('###.###.###-##', '#'),
+  role: 'MEMBER',
+  identityDocument: helpers.replaceSymbolWithNumber('###########', '#'),
+  phoneNumber: helpers.replaceSymbolWithNumber('(##) #####-####', '#'),
 });
 
 export const CreateUserDtoFactory = Factory.define<CreateUserDto>(

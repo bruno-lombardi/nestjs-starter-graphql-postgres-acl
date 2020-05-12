@@ -1,11 +1,4 @@
-import {
-  Resolver,
-  Mutation,
-  Args,
-  Query,
-  ResolveProperty,
-  Parent,
-} from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { ValidationPipe, ParseUUIDPipe, UseGuards } from '@nestjs/common';
@@ -42,7 +35,7 @@ export class UserResolver {
   @Mutation()
   async deleteUser(@Args('id', ParseUUIDPipe) id: string) {
     const result = await this.userService.deleteUser(id);
-    if (result.affected > 0) {
+    if (result.affected) {
       return true;
     } else {
       return false;
@@ -70,22 +63,6 @@ export class UserResolver {
   @Query()
   async me(@CurrentUser() user: User) {
     return user;
-  }
-
-  @UseGuards(GqlAuthGuard, ACGuard)
-  @UsePermissions({
-    name: 'read:own',
-    resource: 'role',
-  })
-  @ResolveProperty()
-  async roles(@Parent() user: User) {
-    const { roles } = await this.userService.findUserBy({
-      where: {
-        id: user.id,
-      },
-      relations: ['roles', 'roles.permissions'],
-    });
-    return roles;
   }
 
   @UseGuards(GqlAuthGuard, ACGuard)

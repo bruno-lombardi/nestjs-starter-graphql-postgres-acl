@@ -4,21 +4,20 @@ import { ConfigModule } from '../../config/config.module';
 import { DatabaseModule } from '../../database/database.module';
 import { UserModule } from '../user.module';
 
-import '../../mock-env';
 import {
   CreateUserDtoFactory,
   UpdateUserDtoFactory,
 } from '../mocks/factories/user.factory';
 import { User } from '../entities/user.entity';
 import { HttpException } from '@nestjs/common';
-import { QueryFailedError, Repository } from 'typeorm';
+import { QueryFailedError, Repository, getConnection } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('UserService', () => {
   let service: UserService;
   let repository: Repository<User>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule, DatabaseModule, UserModule],
     }).compile();
@@ -27,8 +26,14 @@ describe('UserService', () => {
     repository = module.get<Repository<User>>(getRepositoryToken(User));
   });
 
+  afterAll(async () => {
+    const connection = getConnection();
+    await connection.close();
+  });
+
   it('should be defined', () => {
     expect(service).toBeDefined();
+    expect(repository).toBeDefined();
   });
 
   describe('createUser', () => {

@@ -16,12 +16,6 @@ export class AuthResolver {
     password,
   }: SignInDto) {
     const [token, u] = await this.authService.signIn(email, password);
-    if (!token) {
-      throw new HttpException(
-        { error: 'Usuário ou senha incorretos', code: HttpStatus.UNAUTHORIZED },
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
     const user = plainToClass(UserGQL, u);
     user.token = token;
     return user;
